@@ -8,6 +8,9 @@ init:
 test: build
 	cabal test --test-option=--color
 
+specs: build
+	./dist/build/omeka-ipsum-specs/omeka-ipsum-specs
+
 run:
 	cabal run
 
