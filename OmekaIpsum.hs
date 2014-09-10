@@ -4,5 +4,9 @@
 module Main where
 
 
+import           OmekaIpsum.Options
+import           OmekaIpsum.Types
+
+
 main :: IO ()
-main = undefined
+main = print =<< execParser options

@@ -14,11 +14,18 @@ maintainer:          erochest@virginia.edu
 build-type:          Simple
 -- extra-source-files:  
 cabal-version:       >=1.10
+data-files:            assets/default.config
 
 library
-  exposed-modules:     
+  exposed-modules:     OmekaIpsum.Config
+                     , OmekaIpsum.Options
+                     , OmekaIpsum.Types
+                     , Paths_omeka_ipsum
   build-depends:       base >=4.7 && <4.8
+                     , bytestring
+                     , utf8-string
                      , text
+                     , lens
                      , wreq
                      , optparse-applicative
                      , configurator
