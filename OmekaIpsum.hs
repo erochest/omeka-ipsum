@@ -20,7 +20,8 @@ runTask :: OIOptions -> IO ()
 
 runTask Config{..}   =
     B8.putStrLn . encodePretty
-                $ OmekaConfig (fromMaybe (OmekaAuth "" "") _configAuth) ""
+                $ OmekaConfig (fromMaybe (OmekaAuth "ADMIN_USER" "PASSWORD") _configAuth)
+                              "http://localhost/omeka"
 
 runTask Generate{..} = undefined
 
