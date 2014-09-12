@@ -41,8 +41,10 @@ configOptions =
 generateOptions' :: Parser OIOptions
 generateOptions' =   Generate
                  <$> authOptions'
-                 <*> option auto (  short 'c' <> long "config" <> metavar "CONFIG_FILE"
-                                 <> help "A configuration file.")
+                 <*> optional (strOption (  short 'c' <> long "config" <> metavar "CONFIG_FILE"
+                                         <> help "A configuration file."))
+                 <*> option auto (  short 'n' <> long "n" <> metavar "COUNT"
+                                 <> help "The number of Omeka items to generate.")
 
 generateOptions :: ParserInfo OIOptions
 generateOptions =

@@ -12,7 +12,7 @@ specs: build
 	./dist/build/omeka-ipsum-specs/omeka-ipsum-specs
 
 run:
-	cabal run -- config
+	cabal run -- generate --n=10000 --config=test.json
 
 # docs:
 # generate api documentation

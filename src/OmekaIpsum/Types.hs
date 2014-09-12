@@ -10,6 +10,7 @@ module OmekaIpsum.Types
     , _Generate
     , generateAuth
     , generateConfig
+    , generateN
 
     , OmekaAuth(..)
     , omekaAuthUser
@@ -28,6 +29,7 @@ import           Data.Aeson.TH
 import           Data.ByteString      (ByteString)
 import qualified Data.ByteString.UTF8 as B8
 import           Data.Char
+import           Data.Default
 import qualified Data.Text            as T
 
 
@@ -37,9 +39,13 @@ data OmekaAuth = OmekaAuth
                } deriving (Show)
 $(makeLenses ''OmekaAuth)
 
+instance Default OmekaAuth where
+    def = OmekaAuth "" ""
+
 data OIOptions = Config   { _configAuth :: Maybe OmekaAuth }
                | Generate { _generateAuth   :: Maybe OmekaAuth
-                          , _generateConfig :: FilePath
+                          , _generateConfig :: Maybe FilePath
+                          , _generateN      :: Int
                           }
                deriving (Show)
 $(makeLenses ''OIOptions)
@@ -50,6 +56,9 @@ data OmekaConfig = OmekaConfig
                  , _omekaURL  :: T.Text
                  } deriving (Show)
 $(makeLenses ''OmekaConfig)
+
+instance Default OmekaConfig where
+    def = OmekaConfig def "http://localhost/"
 
 instance FromJSON ByteString where
     parseJSON (String s) = return . B8.fromString $ T.unpack s

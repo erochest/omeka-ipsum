@@ -5,10 +5,16 @@
 module Main where
 
 
+import           Control.Applicative
+import           Control.Lens
+import           Control.Monad
 import           Data.Aeson.Encode.Pretty   hiding (Config)
 import qualified Data.ByteString.Lazy.Char8 as B8
+import           Data.Default
 import           Data.Maybe
+import           Data.Traversable
 
+import           OmekaIpsum.Config
 import           OmekaIpsum.Options
 import           OmekaIpsum.Types
 
@@ -19,9 +25,10 @@ main = runTask =<< execParser options
 runTask :: OIOptions -> IO ()
 
 runTask Config{..}   =
-    B8.putStrLn . encodePretty
-                $ OmekaConfig (fromMaybe (OmekaAuth "ADMIN_USER" "PASSWORD") _configAuth)
-                              "http://localhost/omeka"
+    let auth = fromMaybe (OmekaAuth "ADMIN_USER" "PASSWORD") _configAuth
+    in  B8.putStrLn . encodePretty $ def & omekaAuth .~ auth
 
-runTask Generate{..} = undefined
-
+runTask Generate{..} = do
+    c <-  updateConfig _generateAuth . fromMaybe def . join
+      <$> traverse loadConfig _generateConfig
+    print c
