@@ -24,6 +24,7 @@ module OmekaIpsum.Types
 
     , Omeka
     , runOmeka
+    , runOmeka'
     , config
     , session
     ) where
@@ -105,12 +106,16 @@ handler' :: (Ex.SomeException -> Omeka a)
 handler' _ (Right v) = return v
 handler' f (Left e)  = f e
 
-runOmeka' :: Omeka a -> OmekaSession -> IO (Either Ex.SomeException a)
-runOmeka' a = runReaderT (runEitherT $ unOmeka a)
+runSession' :: Omeka a -> OmekaSession -> IO (Either Ex.SomeException a)
+runSession' a = runReaderT (runEitherT $ unOmeka a)
 
 runOmeka :: Omeka a -> OmekaConfig -> Session
          -> IO (Either Ex.SomeException a)
-runOmeka a c = runOmeka' a . OS c
+runOmeka a c = runSession' a . OS c
+
+runOmeka' :: OmekaConfig -> Omeka a -> Session
+          -> IO (Either Ex.SomeException a)
+runOmeka' c a s = runOmeka a c s
 
 instance FromJSON ByteString where
     parseJSON (String s) = return . B8.fromString $ T.unpack s

@@ -12,7 +12,6 @@ import           Data.Aeson.Encode.Pretty   hiding (Config)
 import qualified Data.ByteString.Lazy.Char8 as B8
 import           Data.Default
 import           Data.Maybe
-import           Data.Traversable
 import           Network.Wreq.Session       hiding (options)
 
 import           OmekaIpsum.Config
