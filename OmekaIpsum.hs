@@ -13,8 +13,10 @@ import qualified Data.ByteString.Lazy.Char8 as B8
 import           Data.Default
 import           Data.Maybe
 import           Data.Traversable
+import           Network.Wreq.Session       hiding (options)
 
 import           OmekaIpsum.Config
+import           OmekaIpsum.Omeka
 import           OmekaIpsum.Options
 import           OmekaIpsum.Types
 
@@ -31,4 +33,4 @@ runTask Config{..}   =
 runTask Generate{..} = do
     c <-  updateConfig _generateAuth . fromMaybe def . join
       <$> traverse loadConfig _generateConfig
-    print c
+    print =<< withSession (runOmeka login c)
