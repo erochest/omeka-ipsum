@@ -17,7 +17,7 @@ specs: build
 	./dist/build/omeka-ipsum-specs/omeka-ipsum-specs
 
 run:
-	${CABAL} run
+	${CABAL} run -- --help
 
 
 # docs:
