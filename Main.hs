@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedLists   #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards   #-}
 
@@ -10,7 +11,7 @@ import           Data.Csv             hiding (Parser)
 import qualified Data.Text            as T
 import           Data.Time
 import           Options.Applicative
-import           Test.QuickCheck
+import           System.Random.MWC
 
 
 data OmekaIpsum
@@ -22,38 +23,49 @@ data OmekaIpsum
 
 data LoremIpsum
         = LoremIpsum
-        { liParagraphs :: !Int
-        , liSentences  :: !Int
-        , liWords      :: !Int
-        , loremIpsum   :: T.Text
-        }
 
 data OmekaRow
         = OmekaRow
         { rowTitle       :: !T.Text
         , rowSubject     :: !T.Text
         , rowDescription :: !T.Text
-        , rowDate        :: !Day
+        , rowDate        :: !OmekaDay
         }
 
-instance Arbitrary OmekaRow where
-    arbitrary = undefined
-    shrink _ = undefined
+newtype OmekaDay = OmekaDay { getDay :: Day }
+
+instance ToField OmekaDay where
+    toField = undefined
 
 instance ToNamedRecord OmekaRow where
-    toNamedRecord OmekaRow{..} = undefined
+    toNamedRecord OmekaRow{..} =
+        namedRecord [ "Title"       .= rowTitle
+                    , "Subject"     .= rowSubject
+                    , "Description" .= rowDescription
+                    , "Date"        .= rowDate
+                    ]
 
-
-randomRows :: Int -> Gen [OmekaRow]
-randomRows = vector
 
 columnNames :: Header
-columnNames = undefined
+columnNames = ["Title", "Subject", "Description", "Date"]
+
+loremIpsum :: LoremIpsum -> Int -> Int -> Int -> GenIO -> IO T.Text
+loremIpsum = undefined
+
+randomDay :: GenIO -> IO Day
+randomDay = undefined
+
+
+randomOmekaRow :: GenIO -> IO OmekaRow
+randomOmekaRow = undefined
+
+randomRows :: Int -> GenIO -> IO [OmekaRow]
+randomRows = undefined
 
 main :: IO ()
 main = do
     OmekaIpsum{..} <- execParser opt
-    generate (randomRows randItems)
+    (withSystemRandom . asGenIO $ randomRows randItems)
         >>= B.writeFile outputFile . encodeByName columnNames
 
 
